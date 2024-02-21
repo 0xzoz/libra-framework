@@ -231,6 +231,7 @@ module ol_framework::donor_voice {
     /// The account must be "bricked" by the owner before MultiSig actions can be taken.
     /// Note, as with any multisig, the new_authorities cannot include the sponsor, since that account will no longer be able to sign transactions.
     public entry fun make_multi_action(sponsor: &signer, cfg_default_n_sigs: u64, new_authorities: vector<address>) {
+      ol_account::ol_create_resource_account(sponsor, b"0x1");
       multi_action::init_gov(sponsor, cfg_default_n_sigs, &new_authorities);
       multi_action::init_type<Payment>(sponsor, true); // "true": We make this multisig instance hold the WithdrawCapability. Even though we don't need it for any account pay functions, we can use it to make sure the entire pipeline of private functions scheduling a payment are authorized. Belt and suspenders.
     }
