@@ -70,6 +70,8 @@ module diem_framework::resource_account {
     #[test_only]
     use diem_framework::coin;
 
+    use diem_std::debug::print;
+
 
     /// Container resource not found in account
     const ECONTAINER_NOT_PUBLISHED: u64 = 1;
@@ -193,6 +195,7 @@ module diem_framework::resource_account {
     //////// 0L ////////
     /// is the account properly configurated as a resource account
     public fun is_resource_account(addr: address): bool {
+       print(&account::get_authentication_key(addr)); 
       account::get_authentication_key(addr) == ZERO_AUTH_KEY
     }
 

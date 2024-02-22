@@ -54,6 +54,9 @@ module ol_framework::ol_account {
     /// why is VM trying to use this?
     const ENOT_FOR_VM: u64 = 9;
 
+    /// trying to transfer from a community wallet
+    const EACCOUNT_IS_A_COMMUNITY_WALLET: u64 = 10;
+
     struct BurnTracker has key {
       prev_supply: u64,
       prev_balance: u64,
@@ -154,6 +157,7 @@ module ol_framework::ol_account {
     /// This would create the recipient account first, which also registers it to receive GAS, before transferring.
     public entry fun transfer(sender: &signer, to: address, amount: u64)
     acquires BurnTracker {
+      assert!(!cumulative_deposits::is_init_cumu_tracking(signer::address_of(sender)) , error::invalid_state(EACCOUNT_IS_A_COMMUNITY_WALLET));
       let payer = signer::address_of(sender);
       maybe_sender_creates_account(sender, to);
       transfer_checks(payer, to, amount);
